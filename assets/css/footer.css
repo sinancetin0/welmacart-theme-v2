@@ -1,0 +1,445 @@
+/* Footer Styles - Apple-inspired professional design */
+
+.site-footer {
+    background-color: #f5f5f7;
+    border-top: 1px solid #e5e5e7;
+    margin-top: var(--space-6xl);
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+}
+
+/* Main Footer */
+.footer-main {
+    padding: var(--space-3xl) 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr;
+    gap: var(--space-2xl);
+    align-items: start;
+}
+
+/* Brand Section */
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.footer-logo img {
+    max-height: 32px;
+    width: auto;
+}
+
+.footer-brand-link {
+    text-decoration: none;
+    color: var(--color-text);
+}
+
+.brand-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.brand-tagline {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    max-width: 200px;
+}
+
+.footer-social {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background-color: white;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid #e5e5e7;
+}
+
+.social-link:hover {
+    background-color: var(--color-primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 62, 3, 0.2);
+}
+
+/* Navigation Sections */
+.footer-nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.footer-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-sm) 0;
+    letter-spacing: 0.02em;
+}
+
+.footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.footer-links a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    padding: var(--space-xs) 0;
+    transition: color 0.2s ease;
+    font-size: 0.8rem;
+}
+
+.footer-links a:hover {
+    color: var(--color-primary);
+}
+
+/* Newsletter Section */
+.footer-newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    background: white;
+    padding: var(--space-lg);
+    border-radius: 12px;
+    border: 1px solid #e5e5e7;
+}
+
+.newsletter-text {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.newsletter-form {
+    margin-top: var(--space-sm);
+}
+
+.newsletter-input-group {
+    position: relative;
+    display: flex;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e5e5e7;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.newsletter-input-group:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 62, 3, 0.1);
+}
+
+.newsletter-input {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: transparent;
+    font-size: 0.8rem;
+    color: var(--color-text);
+    outline: none;
+}
+
+.newsletter-input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.newsletter-button {
+    padding: var(--space-sm);
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+}
+
+.newsletter-button:hover {
+    background: var(--color-primary-hover);
+}
+
+.newsletter-privacy {
+    margin-top: var(--space-sm);
+}
+
+.newsletter-privacy small {
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
+.newsletter-privacy a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.newsletter-privacy a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    border-top: 1px solid #e5e5e7;
+    padding: var(--space-lg) 0;
+    background: white;
+}
+
+.footer-bottom-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.footer-legal {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.copyright {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+}
+
+.legal-links {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.legal-links a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    transition: color 0.2s ease;
+}
+
+.legal-links a:hover {
+    color: var(--color-primary);
+}
+
+/* Payment Section */
+.footer-payments {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.payment-text {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.payment-icons {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.payment-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    background: white;
+    border: 1px solid #e5e5e7;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    min-width: 32px;
+    height: 20px;
+}
+
+.payment-icon.visa {
+    color: #1a1f71;
+}
+
+.payment-icon.mastercard {
+    color: #eb001b;
+}
+
+.payment-icon.paypal {
+    color: #003087;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: var(--space-xl);
+    }
+    
+    .footer-brand {
+        grid-column: 1 / -1;
+        margin-bottom: var(--space-lg);
+    }
+    
+    .footer-newsletter {
+        grid-column: 1 / -1;
+        margin-top: var(--space-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-lg);
+    }
+    
+    .footer-bottom-content {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-sm);
+    }
+    
+    .footer-legal {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .legal-links {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-container {
+        padding: 0 var(--space-md);
+    }
+    
+    .footer-main {
+        padding: var(--space-xl) 0;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+    }
+    
+    .footer-brand {
+        text-align: center;
+        margin-bottom: var(--space-lg);
+    }
+    
+    .footer-social {
+        justify-content: center;
+    }
+    
+    .footer-newsletter {
+        padding: var(--space-md);
+    }
+    
+    .payment-icons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Hover animations */
+.footer-nav-section {
+    transition: transform 0.2s ease;
+}
+
+.footer-nav-section:hover {
+    transform: translateY(-2px);
+}
+
+.footer-newsletter {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.footer-newsletter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.footer-navigation {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.footer-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: var(--space-lg);
+}
+
+.footer-menu a {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    transition: color var(--transition-fast);
+}
+
+.footer-menu a:hover {
+    color: var(--color-primary);
+}
+
+.footer-bottom {
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+}
+
+.copyright {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    text-align: center;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .footer-branding {
+        max-width: none;
+        margin: 0 auto;
+    }
+    
+    .footer-navigation {
+        justify-content: center;
+    }
+    
+    .footer-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}

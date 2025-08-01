@@ -1,0 +1,231 @@
+/* Content Styles */
+.site-main {
+    padding:0;
+}
+
+.content-article {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.entry-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.entry-title {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text);
+    margin: 0;
+}
+
+.entry-title a {
+    color: inherit;
+    transition: color var(--transition-fast);
+}
+
+.entry-title a:hover {
+    color: var(--color-primary);
+}
+
+.entry-thumbnail {
+    margin: var(--space-xl) 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.entry-thumbnail img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.entry-content {
+    font-size: var(--text-lg);
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+.entry-content p {
+    margin-bottom: var(--space-lg);
+}
+
+.entry-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+}
+
+.read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-primary);
+    font-weight: var(--font-medium);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.read-more:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Pagination */
+.pagination {
+    margin-top: var(--space-2xl);
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.pagination .page-numbers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-weight: var(--font-medium);
+    transition: all var(--transition-fast);
+}
+
+.pagination .page-numbers:hover {
+    background-color: var(--color-background-secondary);
+    color: var(--color-primary);
+}
+
+.pagination .page-numbers.current {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* No Results */
+.no-results {
+    text-align: center;
+    padding: var(--space-2xl) 0;
+}
+
+.no-results .page-title {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-lg);
+}
+
+.no-results .page-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.no-results .search-form {
+    margin-top: var(--space-xl);
+}
+
+/* WooCommerce Button Overrides */
+.woocommerce .button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce #respond input#submit,
+.woocommerce .featured-add-to-cart,
+.featured-add-to-cart {
+    background: var(--color-primary) !important;
+    color: white !important;
+    border: none !important;
+    padding: var(--space-md) var(--space-xl) !important;
+    border-radius: var(--radius-full) !important;
+    font-size: var(--text-sm) !important;
+    font-weight: var(--font-semibold) !important;
+    cursor: pointer !important;
+    transition: all var(--transition-fast) !important;
+    width: 100% !important;
+    text-align: center !important;
+    letter-spacing: 0.02em !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.woocommerce .button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover,
+.woocommerce #respond input#submit:hover,
+.woocommerce .featured-add-to-cart:hover,
+.featured-add-to-cart:hover {
+    background: var(--color-primary-dark) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(255, 62, 3, 0.25) !important;
+    text-decoration: none !important;
+}
+
+/* Specific override for add to cart button wrapper */
+.woocommerce .product.add_to_cart_inline {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.woocommerce .product.add_to_cart_inline .button {
+    margin: 0 !important;
+}
+
+/* Additional WooCommerce resets */
+.woocommerce .product.add_to_cart_inline.featured-add-to-cart {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* Force override for all button states */
+.woocommerce a.button,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt,
+.woocommerce #respond input#submit.alt {
+    background: var(--color-primary) !important;
+    color: white !important;
+}
+
+.woocommerce a.button:hover,
+.woocommerce button.button.alt:hover,
+.woocommerce input.button.alt:hover,
+.woocommerce #respond input#submit.alt:hover {
+    background: var(--color-primary-dark) !important;
+    color: white !important;
+}
+
+/* Ultra specific selectors for stubborn WooCommerce styles */
+body .woocommerce .product.add_to_cart_inline.featured-add-to-cart,
+body .woocommerce p.product.add_to_cart_inline.featured-add-to-cart {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Override any inline styles */
+.featured-add-to-cart[style] {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Target the specific button element */
+.featured-add-to-cart .button,
+.featured-add-to-cart a.button,
+p.featured-add-to-cart .button,
+p.featured-add-to-cart a.button {
+    background: var(--color-primary) !important;
+    color: white !important;
+    border: none !important;
+    padding: var(--space-md) var(--space-xl) !important;
+    border-radius: var(--radius-full) !important;
+    font-size: var(--text-sm) !important;
+    font-weight: var(--font-semibold) !important;
+    width: 100% !important;
+    margin: 0 !important;
+}

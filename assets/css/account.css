@@ -1,0 +1,801 @@
+/* My Account Page Styles - Apple-inspired design */
+
+.my-account-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding-bottom: var(--space-3xl);
+}
+
+/* Account Header */
+.account-header {
+    background: white;
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-3xl) 0 var(--space-2xl);
+    margin-bottom: var(--space-2xl);
+}
+
+.account-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+    text-align: center;
+}
+
+.account-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    line-height: 1.2;
+}
+
+.account-subtitle {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Account Content Layout */
+.account-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+}
+
+.account-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: var(--space-2xl);
+    align-items: start;
+    width: 100%;
+}
+
+/* Account Navigation */
+.account-navigation {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    position: sticky;
+    top: calc(64px + var(--space-xl));
+    width: 100%;
+}
+
+.account-nav-header {
+    padding: var(--space-xl);
+    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.account-user-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.user-avatar {
+    flex-shrink: 0;
+}
+
+.user-avatar img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-xs) 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-email {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Navigation Menu */
+.account-nav-menu {
+    padding: 0;
+}
+
+.woocommerce-MyAccount-navigation {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+}
+
+.woocommerce-MyAccount-navigation ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+}
+
+.woocommerce-MyAccount-navigation li {
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--color-border);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.woocommerce-MyAccount-navigation li:last-child {
+    border-bottom: none;
+}
+
+.woocommerce-MyAccount-navigation a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-xl);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--text-base);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.woocommerce-MyAccount-navigation a:hover {
+    background: var(--color-background-secondary);
+    color: var(--color-primary);
+}
+
+.woocommerce-MyAccount-navigation .is-active a {
+    background: var(--color-primary);
+    color: white;
+    font-weight: 600;
+}
+
+.woocommerce-MyAccount-navigation .is-active a::after {
+    content: '';
+    position: absolute;
+    right: var(--space-lg);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Navigation Icons */
+.woocommerce-MyAccount-navigation a::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.woocommerce-MyAccount-navigation a:hover::before,
+.woocommerce-MyAccount-navigation .is-active a::before {
+    opacity: 1;
+}
+
+/* Specific menu item icons */
+.woocommerce-MyAccount-navigation-link--dashboard a::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 5a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2H10a2 2 0 01-2-2v0z'/%3E%3C/svg%3E");
+}
+
+.woocommerce-MyAccount-navigation-link--orders a::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z'/%3E%3C/svg%3E");
+}
+
+.woocommerce-MyAccount-navigation-link--edit-account a::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'/%3E%3C/svg%3E");
+}
+
+.woocommerce-MyAccount-navigation-link--edit-address a::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'/%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E");
+}
+
+.woocommerce-MyAccount-navigation-link--customer-logout a::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1'/%3E%3C/svg%3E");
+}
+
+/* Account Main Content */
+.account-main {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    width: 100%;
+    min-width: 0;
+}
+
+.woocommerce-MyAccount-content {
+    padding: var(--space-2xl);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Account Content Sections */
+.woocommerce-MyAccount-content h2,
+.woocommerce-MyAccount-content h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-lg) 0;
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Hide duplicate WooCommerce dashboard title */
+.woocommerce-MyAccount-content .woocommerce-MyAccount-content h2:first-child,
+.woocommerce-MyAccount-content h2:first-of-type {
+    display: none;
+}
+
+.woocommerce-MyAccount-content p {
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+}
+
+/* Dashboard Welcome */
+.woocommerce-MyAccount-content .woocommerce-Message {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #ff6b35 100%);
+    color: white;
+    padding: var(--space-xl);
+    border-radius: 12px;
+    border: none;
+    margin-bottom: var(--space-xl);
+    text-align: center;
+}
+
+.woocommerce-MyAccount-content .woocommerce-Message a {
+    color: white;
+    text-decoration: underline;
+}
+
+/* Tables */
+.woocommerce-MyAccount-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--space-xl);
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    table-layout: auto;
+}
+
+.woocommerce-MyAccount-content table th {
+    background: var(--color-background-secondary);
+    padding: var(--space-md) var(--space-lg);
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.woocommerce-MyAccount-content table td {
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+}
+
+.woocommerce-MyAccount-content table tr:last-child td {
+    border-bottom: none;
+}
+
+.woocommerce-MyAccount-content table tr:hover {
+    background: var(--color-background-light);
+}
+
+/* Buttons */
+.woocommerce-MyAccount-content .button,
+.woocommerce-MyAccount-content .woocommerce-button {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.woocommerce-MyAccount-content .button:hover,
+.woocommerce-MyAccount-content .woocommerce-button:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Forms */
+.woocommerce-MyAccount-content .woocommerce-form-row {
+    margin-bottom: var(--space-lg);
+}
+
+.woocommerce-MyAccount-content label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.woocommerce-MyAccount-content input[type="text"],
+.woocommerce-MyAccount-content input[type="email"],
+.woocommerce-MyAccount-content input[type="password"],
+.woocommerce-MyAccount-content input[type="tel"],
+.woocommerce-MyAccount-content select,
+.woocommerce-MyAccount-content textarea {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.woocommerce-MyAccount-content input:focus,
+.woocommerce-MyAccount-content select:focus,
+.woocommerce-MyAccount-content textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 62, 3, 0.1);
+}
+
+/* Dashboard Specific Styles */
+.account-dashboard {
+    width: 100%;
+    max-width: none;
+}
+
+.dashboard-welcome {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #ff6b35 100%);
+    color: white;
+    padding: var(--space-2xl);
+    border-radius: 16px;
+    margin-bottom: var(--space-2xl);
+    text-align: center;
+}
+
+.dashboard-welcome h2 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    margin: 0 0 var(--space-md) 0;
+    border: none;
+    padding: 0;
+    color: white;
+}
+
+.dashboard-welcome p {
+    font-size: var(--text-lg);
+    margin: 0;
+    opacity: 0.95;
+    color: white;
+}
+
+/* Dashboard Stats */
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: var(--space-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, #ff6b35 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-icon svg {
+    color: white;
+}
+
+.stat-content h3 {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-xs) 0;
+    border: none;
+    padding: 0;
+}
+
+.stat-number {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+}
+
+/* Dashboard Sections */
+.dashboard-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.section-header h3 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+.view-all-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--text-sm);
+    transition: color 0.2s ease;
+}
+
+.view-all-link:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Recent Orders */
+.recent-orders {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.order-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: var(--space-lg);
+    transition: all 0.2s ease;
+}
+
+.order-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.order-number {
+    font-size: var(--text-base);
+    color: var(--color-text);
+}
+
+.order-status {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.order-status.status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.order-status.status-processing {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.order-status.status-on-hold {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.order-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+}
+
+.order-total {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.order-actions {
+    text-align: right;
+}
+
+.order-action-btn {
+    background: var(--color-background-secondary);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.order-action-btn:hover {
+    background: var(--color-primary);
+    color: white;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+}
+
+.quick-action-card {
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: var(--space-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary);
+}
+
+.action-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--color-background-secondary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+}
+
+.quick-action-card:hover .action-icon {
+    background: var(--color-primary);
+}
+
+.quick-action-card:hover .action-icon svg {
+    color: white;
+}
+
+.action-icon svg {
+    color: var(--color-primary);
+    transition: color 0.2s ease;
+}
+
+.action-content h4 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-xs) 0;
+}
+
+.action-content p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .account-layout {
+        grid-template-columns: 250px 1fr;
+        gap: var(--space-xl);
+    }
+    
+    .account-title {
+        font-size: 2rem;
+    }
+    
+    .account-navigation {
+        width: 100%;
+    }
+    
+    .account-main {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .account-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+    }
+    
+    .account-navigation {
+        position: static;
+        order: 2;
+        width: 100%;
+    }
+    
+    .account-main {
+        order: 1;
+        width: 100%;
+        min-width: 0;
+    }
+    
+    .account-header {
+        padding: var(--space-xl) 0 var(--space-lg);
+        margin-bottom: var(--space-lg);
+    }
+    
+    .account-title {
+        font-size: 1.75rem;
+    }
+    
+    .account-subtitle {
+        font-size: var(--text-base);
+    }
+    
+    .account-content {
+        padding: 0 var(--space-md);
+    }
+    
+    .account-nav-header {
+        padding: var(--space-lg);
+    }
+    
+    .woocommerce-MyAccount-content {
+        padding: var(--space-lg);
+        width: 100%;
+    }
+    
+    .woocommerce-MyAccount-navigation a {
+        padding: var(--space-md) var(--space-lg);
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .account-header {
+        padding: var(--space-lg) 0;
+    }
+    
+    .account-title {
+        font-size: 1.5rem;
+    }
+    
+    .user-name {
+        font-size: var(--text-sm);
+    }
+    
+    .user-email {
+        font-size: var(--text-xs);
+    }
+    
+    .woocommerce-MyAccount-content {
+        padding: var(--space-md);
+    }
+    
+    .woocommerce-MyAccount-content table {
+        font-size: var(--text-sm);
+    }
+    
+    .woocommerce-MyAccount-content table th,
+    .woocommerce-MyAccount-content table td {
+        padding: var(--space-sm);
+    }
+}
+
+/* Mobile Dashboard Responsive */
+@media (max-width: 768px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+    
+    .stat-card {
+        padding: var(--space-lg);
+    }
+    
+    .dashboard-welcome {
+        padding: var(--space-xl);
+    }
+    
+    .dashboard-welcome h2 {
+        font-size: var(--text-xl);
+    }
+    
+    .dashboard-welcome p {
+        font-size: var(--text-base);
+    }
+    
+    .quick-actions {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+    }
+    
+    .quick-action-card {
+        padding: var(--space-lg);
+    }
+    
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+    
+    .order-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+    
+    .order-actions {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .order-action-btn {
+        display: block;
+        text-align: center;
+        width: 100%;
+    }
+}

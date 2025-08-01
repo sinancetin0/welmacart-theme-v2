@@ -1,0 +1,188 @@
+/* Ürün Detay Sayfası */
+.product-single-wrapper {
+    padding: var(--space-2xl) 0;
+}
+
+/* Ürün Gallery */
+.woocommerce-product-gallery {
+    position: relative;
+}
+
+.woocommerce-product-gallery__wrapper {
+    margin: 0;
+    padding: 0;
+}
+
+.woocommerce-product-gallery__image {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.woocommerce-product-gallery__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.flex-control-thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+    margin: var(--space-md) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.flex-control-thumbs li {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.flex-control-thumbs img {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.6;
+    transition: opacity var(--transition-fast);
+    cursor: pointer;
+}
+
+.flex-control-thumbs img.flex-active,
+.flex-control-thumbs img:hover {
+    opacity: 1;
+}
+
+/* Ürün Bilgileri */
+.entry-summary {
+    padding-left: var(--space-xl);
+}
+
+.product_title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-md);
+}
+
+.woocommerce-product-details__short-description {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-lg);
+}
+
+.price {
+    font-size: var(--text-2xl);
+    color: var(--color-primary);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-lg);
+    display: block;
+}
+
+/* Miktar Seçici */
+.quantity {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-xs);
+    margin-right: var(--space-sm);
+}
+
+.quantity input {
+    width: 60px;
+    text-align: center;
+    border: none;
+    padding: var(--space-xs);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    background: transparent;
+}
+
+/* Sepete Ekle Butonu */
+.single_add_to_cart_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--space-sm) var(--space-xl);
+    border-radius: var(--radius-full);
+    font-weight: var(--font-medium);
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.single_add_to_cart_button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+/* Ürün Sekmeleri */
+.woocommerce-tabs {
+    margin-top: var(--space-2xl);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-xl);
+}
+
+.tabs {
+    display: flex;
+    gap: var(--space-md);
+    list-style: none;
+    margin: 0 0 var(--space-xl);
+    padding: 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.tabs li a {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-medium);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+}
+
+.tabs li.active a {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.woocommerce-Tabs-panel {
+    margin: 0;
+    padding: 0;
+}
+
+.woocommerce-Tabs-panel--description h2,
+.woocommerce-Tabs-panel--additional_information h2 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-md);
+}
+
+/* İlgili Ürünler */
+.related.products {
+    margin-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-xl);
+}
+
+.related.products > h2 {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-xl);
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-single-wrapper .product {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .entry-summary {
+        padding-left: 0;
+        padding-top: var(--space-xl);
+    }
+    
+    .tabs {
+        flex-wrap: wrap;
+    }
+}

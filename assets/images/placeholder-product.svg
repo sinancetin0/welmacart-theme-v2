@@ -1,0 +1,8 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#f5f5f5"/>
+  <rect x="80" y="120" width="240" height="160" fill="#e0e0e0" rx="8"/>
+  <circle cx="140" cy="170" r="20" fill="#d0d0d0"/>
+  <polygon points="120,220 160,180 200,200 240,160 280,200 280,240 120,240" fill="#d0d0d0"/>
+  <text x="200" y="290" text-anchor="middle" fill="#999" font-family="Arial, sans-serif" font-size="14">Ürün Görseli</text>
+  <text x="200" y="310" text-anchor="middle" fill="#999" font-family="Arial, sans-serif" font-size="14">Yüklenmemiş</text>
+</svg>
