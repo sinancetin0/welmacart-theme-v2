@@ -1,197 +1,370 @@
 <?php
 /**
- * WelmaCart v2 functions and definitions
+ * WelmaCart v2 functions and definitions - Safe Version
  */
 
-// Debug mode - remove in production
-if (!defined('WP_DEBUG')) {
-    define('WP_DEBUG', true);
-}
-
-// Tema setup
-require get_template_directory() . '/inc/setup.php';
-
-// Stil ve script dosyalarının yüklenmesi
-require get_template_directory() . '/inc/enqueue.php';
-
-// Özel post tipleri ve taksonomiler
-require get_template_directory() . '/inc/custom-post-types.php';
-
-// ACF alanları
-require get_template_directory() . '/inc/acf-fields.php';
-
-// ACF Product Features
-require get_template_directory() . '/inc/acf-product-fields.php';
-
-// Custom Meta Boxes (ACF fallback)
-require get_template_directory() . '/inc/meta-boxes.php';
-
-// WooCommerce entegrasyonu
-require get_template_directory() . '/inc/woocommerce.php';
-
-// Single product customizations
-require get_template_directory() . '/inc/single-product-hooks.php';
-
-// Yardımcı fonksiyonlar
-require get_template_directory() . '/inc/helpers.php';
-
-// Debug fonksiyonları (development için)
-if (defined('WP_DEBUG') && WP_DEBUG) {
-    require get_template_directory() . '/inc/debug.php';
-    require get_template_directory() . '/template-debug.php';
+// Prevent direct access
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 /**
- * Page Templates için özel fonksiyonlar
+ * Theme setup
  */
-
-// Page Template'lerin düzgün çalışması için
-add_filter('theme_page_templates', 'welmacart_v2_add_page_templates');
-function welmacart_v2_add_page_templates($templates) {
-    $templates['page-about.php'] = 'Hakkımızda';
-    $templates['page-contact.php'] = 'İletişim';
-    $templates['page-style-guide.php'] = 'Stil Rehberi';
-    return $templates;
+function welmacart_v2_setup() {
+    // Add theme support
+    add_theme_support('post-thumbnails');
+    add_theme_support('title-tag');
+    add_theme_support('html5', array(
+        'search-form',
+        'comment-form',
+        'comment-list',
+        'gallery',
+        'caption',
+    ));
+    
+    // WooCommerce support
+    add_theme_support('woocommerce');
+    add_theme_support('wc-product-gallery-zoom');
+    add_theme_support('wc-product-gallery-lightbox');
+    add_theme_support('wc-product-gallery-slider');
 }
-
-// Template cache temizleme
-add_action('wp_insert_post', 'welmacart_v2_flush_template_cache');
-function welmacart_v2_flush_template_cache() {
-    wp_cache_delete('page_templates-' . get_option('stylesheet'), 'themes');
-}
+add_action('after_setup_theme', 'welmacart_v2_setup');
 
 /**
- * WooCommerce My Account Customizations
+ * Enqueue scripts and styles
  */
-
-// Remove default dashboard content to prevent duplicate titles
-add_action('init', 'welmacart_v2_remove_wc_dashboard_content');
-function welmacart_v2_remove_wc_dashboard_content() {
-    remove_action('woocommerce_account_dashboard', 'woocommerce_account_dashboard', 10);
+function welmacart_v2_scripts() {
+    // Main stylesheet
+    wp_enqueue_style('welmacart-v2-style', get_stylesheet_uri(), array(), '2.0.0');
+    
+    // Base CSS
+    wp_enqueue_style('welmacart-v2-base', get_template_directory_uri() . '/assets/css/base.css', array(), '2.0.0');
+    wp_enqueue_style('welmacart-v2-header', get_template_directory_uri() . '/assets/css/header.css', array(), '2.0.0');
+    wp_enqueue_style('welmacart-v2-footer', get_template_directory_uri() . '/assets/css/footer.css', array(), '2.0.0');
+    
+    // Page specific CSS
+    if (is_front_page()) {
+        wp_enqueue_style('welmacart-v2-front-page', get_template_directory_uri() . '/assets/css/front-page.css', array(), '2.0.0');
+        wp_enqueue_style('welmacart-v2-hero', get_template_directory_uri() . '/assets/css/hero.css', array(), '2.0.0');
+    }
+    
+    if (is_shop() || is_product_category() || is_product_tag()) {
+        wp_enqueue_style('welmacart-v2-shop', get_template_directory_uri() . '/assets/css/shop.css', array(), '2.0.0');
+    }
+    
+    if (is_product()) {
+        wp_enqueue_style('welmacart-v2-single-product', get_template_directory_uri() . '/assets/css/single-product.css', array(), '2.0.0');
+    }
+    
+    if (is_account_page()) {
+        wp_enqueue_style('welmacart-v2-account', get_template_directory_uri() . '/assets/css/account.css', array(), '2.0.0');
+    }
+    
+    // JavaScript
+    wp_enqueue_script('welmacart-v2-header', get_template_directory_uri() . '/assets/js/header.js', array('jquery'), '2.0.0', true);
+    
+    if (is_front_page()) {
+        wp_enqueue_script('welmacart-v2-hero', get_template_directory_uri() . '/assets/js/hero-slider.js', array('jquery'), '2.0.0', true);
+    }
 }
-
-// Hide WooCommerce default messages on account pages
-add_filter('woocommerce_my_account_my_orders_title', '__return_empty_string');
-add_filter('woocommerce_my_account_my_address_title', '__return_empty_string');
-add_filter('woocommerce_my_account_my_orders_actions', '__return_empty_array');
+add_action('wp_enqueue_scripts', 'welmacart_v2_scripts');
 
 /**
- * Custom Image Sizes for Hero Banner (Optimized)
+ * Custom Image Sizes (Safe version)
  */
-add_action('after_setup_theme', 'welmacart_v2_add_image_sizes');
 function welmacart_v2_add_image_sizes() {
     // Hero banner için optimize edilmiş boyutlar
-    add_image_size('hero-banner', 1920, 1080, true); // Desktop
-    add_image_size('hero-banner-mobile', 768, 768, true); // Mobile - kare format
-    add_image_size('hero-banner-tablet', 1366, 768, true); // Tablet
-    // Retina size kaldırıldı - memory sorunları için
+    add_image_size('hero-banner', 1920, 1080, true);
+    add_image_size('hero-banner-mobile', 768, 768, true);
+    add_image_size('hero-banner-tablet', 1366, 768, true);
 }
-
-// Admin'de custom image size'ları göster
-add_filter('image_size_names_choose', 'welmacart_v2_custom_image_sizes');
-function welmacart_v2_custom_image_sizes($sizes) {
-    return array_merge($sizes, array(
-        'hero-banner' => 'Hero Banner (1920x1080)',
-        'hero-banner-mobile' => 'Hero Banner Mobile (768x768)',
-        'hero-banner-tablet' => 'Hero Banner Tablet (1366x768)',
-    ));
-}
+add_action('after_setup_theme', 'welmacart_v2_add_image_sizes');
 
 /**
- * Image quality optimization with memory management
+ * Image quality optimization
  */
-add_filter('wp_editor_set_quality', 'welmacart_v2_image_quality', 10, 2);
 function welmacart_v2_image_quality($quality, $mime_type) {
     if ($mime_type === 'image/jpeg') {
-        return 85; // Dengeli kalite - memory friendly
+        return 85;
     }
     return $quality;
 }
+add_filter('wp_editor_set_quality', 'welmacart_v2_image_quality', 10, 2);
 
 /**
- * Increase memory limit for image processing
+ * Memory limit for image processing
  */
-add_filter('image_memory_limit', 'welmacart_v2_increase_image_memory');
 function welmacart_v2_increase_image_memory($limit) {
-    return '512M'; // Image processing için yeterli memory
+    return '512M';
+}
+add_filter('image_memory_limit', 'welmacart_v2_increase_image_memory');
+
+/**
+ * WooCommerce customizations
+ */
+if (class_exists('WooCommerce')) {
+    // Remove default WooCommerce styles
+    add_filter('woocommerce_enqueue_styles', '__return_empty_array');
+    
+    // Custom WooCommerce hooks
+    remove_action('woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10);
+    remove_action('woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10);
+    
+    add_action('woocommerce_before_main_content', 'welmacart_v2_wrapper_start', 10);
+    add_action('woocommerce_after_main_content', 'welmacart_v2_wrapper_end', 10);
+}
+
+function welmacart_v2_wrapper_start() {
+    echo '<main id="main" class="site-main">';
+}
+
+function welmacart_v2_wrapper_end() {
+    echo '</main>';
 }
 
 /**
- * Error handling for image processing
+ * Navigation menus
  */
-add_action('wp_handle_upload_prefilter', 'welmacart_v2_handle_upload_errors');
-function welmacart_v2_handle_upload_errors($file) {
-    // Dosya boyutu kontrolü
-    $max_size = 15 * 1024 * 1024; // 15MB limit (daha düşük)
-    if ($file['size'] > $max_size) {
-        $file['error'] = 'Dosya çok büyük. Maksimum 15MB yükleyebilirsiniz.';
-        return $file;
+function welmacart_v2_menus() {
+    register_nav_menus(array(
+        'primary' => __('Primary Navigation', 'welmacart-v2'),
+        'footer' => __('Footer Navigation', 'welmacart-v2'),
+    ));
+}
+add_action('init', 'welmacart_v2_menus');
+
+/**
+ * Include additional files only if they exist
+ */
+$includes = array(
+    'inc/setup.php',
+    'inc/enqueue.php',
+    'inc/woocommerce.php',
+    'inc/helpers.php'
+);
+
+foreach ($includes as $include) {
+    $file_path = get_template_directory() . '/' . $include;
+    if (file_exists($file_path)) {
+        require_once $file_path;
     }
+}
+
+/**
+ * Error handling for missing ACF
+ */
+if (!function_exists('get_field')) {
+    function get_field($field_name, $post_id = null) {
+        return get_post_meta($post_id ?: get_the_ID(), $field_name, true);
+    }
+}
+
+/**
+ * Safe template loading
+ */
+function welmacart_v2_get_template_part($slug, $name = null) {
+    $template = $slug;
+    if ($name) {
+        $template .= '-' . $name;
+    }
+    $template .= '.php';
     
-    // Image boyutları kontrolü
-    if (strpos($file['type'], 'image/') === 0) {
-        $image_info = getimagesize($file['tmp_name']);
-        if ($image_info && ($image_info[0] > 2560 || $image_info[1] > 2560)) {
-            $file['error'] = 'Resim boyutları çok büyük. Maksimum 2560x2560 pixel olmalıdır.';
+    $located = locate_template($template);
+    if ($located) {
+        load_template($located, false);
+    }
+}
+
+/**
+ * Theme activation hook
+ */
+function welmacart_v2_activation() {
+    // Flush rewrite rules
+    flush_rewrite_rules();
+    
+    // Set default options
+    update_option('welmacart_v2_activated', true);
+}
+register_activation_hook(__FILE__, 'welmacart_v2_activation');
+
+/**
+ * Custom Post Types
+ */
+function welmacart_v2_register_post_types() {
+    // Hero Banners CPT
+    register_post_type('hero_banner', array(
+        'labels' => array(
+            'name' => 'Hero Banners',
+            'singular_name' => 'Hero Banner',
+            'menu_name' => 'Hero Banners',
+            'add_new' => 'Add New Banner',
+            'add_new_item' => 'Add New Hero Banner',
+            'edit_item' => 'Edit Hero Banner',
+            'new_item' => 'New Hero Banner',
+            'view_item' => 'View Hero Banner',
+            'search_items' => 'Search Hero Banners',
+            'not_found' => 'No hero banners found',
+            'not_found_in_trash' => 'No hero banners found in trash'
+        ),
+        'public' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 20,
+        'menu_icon' => 'dashicons-format-image',
+        'supports' => array('title', 'editor', 'thumbnail'),
+        'has_archive' => false,
+        'rewrite' => false
+    ));
+
+    // Collections CPT
+    register_post_type('collection', array(
+        'labels' => array(
+            'name' => 'Collections',
+            'singular_name' => 'Collection',
+            'menu_name' => 'Collections',
+            'add_new' => 'Add New Collection',
+            'add_new_item' => 'Add New Collection',
+            'edit_item' => 'Edit Collection',
+            'new_item' => 'New Collection',
+            'view_item' => 'View Collection',
+            'search_items' => 'Search Collections',
+            'not_found' => 'No collections found',
+            'not_found_in_trash' => 'No collections found in trash'
+        ),
+        'public' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 21,
+        'menu_icon' => 'dashicons-portfolio',
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
+        'has_archive' => true,
+        'rewrite' => array('slug' => 'collections'),
+        'show_in_rest' => true
+    ));
+}
+add_action('init', 'welmacart_v2_register_post_types');
+
+/**
+ * ACF Fields for Hero Banners (Fallback)
+ */
+function welmacart_v2_hero_fields() {
+    if (function_exists('acf_add_local_field_group')) {
+        acf_add_local_field_group(array(
+            'key' => 'group_hero_banner',
+            'title' => 'Hero Banner Fields',
+            'fields' => array(
+                array(
+                    'key' => 'field_hero_image',
+                    'label' => 'Hero Image',
+                    'name' => 'hero_image',
+                    'type' => 'image',
+                    'return_format' => 'array',
+                    'preview_size' => 'medium'
+                ),
+                array(
+                    'key' => 'field_hero_title',
+                    'label' => 'Hero Title',
+                    'name' => 'hero_title',
+                    'type' => 'text'
+                ),
+                array(
+                    'key' => 'field_hero_subtitle',
+                    'label' => 'Hero Subtitle',
+                    'name' => 'hero_subtitle',
+                    'type' => 'textarea'
+                ),
+                array(
+                    'key' => 'field_hero_button_text',
+                    'label' => 'Button Text',
+                    'name' => 'hero_button_text',
+                    'type' => 'text'
+                ),
+                array(
+                    'key' => 'field_hero_button_link',
+                    'label' => 'Button Link',
+                    'name' => 'hero_button_link',
+                    'type' => 'url'
+                )
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'hero_banner'
+                    )
+                )
+            )
+        ));
+    }
+}
+add_action('acf/init', 'welmacart_v2_hero_fields');
+
+/**
+ * Meta boxes for Hero Banners (ACF Alternative)
+ */
+function welmacart_v2_add_hero_meta_boxes() {
+    add_meta_box(
+        'hero_banner_fields',
+        'Hero Banner Settings',
+        'welmacart_v2_hero_meta_box_callback',
+        'hero_banner',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'welmacart_v2_add_hero_meta_boxes');
+
+function welmacart_v2_hero_meta_box_callback($post) {
+    wp_nonce_field('hero_banner_meta_box', 'hero_banner_meta_box_nonce');
+    
+    $hero_title = get_post_meta($post->ID, 'hero_title', true);
+    $hero_subtitle = get_post_meta($post->ID, 'hero_subtitle', true);
+    $hero_button_text = get_post_meta($post->ID, 'hero_button_text', true);
+    $hero_button_link = get_post_meta($post->ID, 'hero_button_link', true);
+    
+    echo '<table class="form-table">';
+    echo '<tr><th><label for="hero_title">Hero Title</label></th>';
+    echo '<td><input type="text" id="hero_title" name="hero_title" value="' . esc_attr($hero_title) . '" style="width: 100%;" /></td></tr>';
+    
+    echo '<tr><th><label for="hero_subtitle">Hero Subtitle</label></th>';
+    echo '<td><textarea id="hero_subtitle" name="hero_subtitle" rows="3" style="width: 100%;">' . esc_textarea($hero_subtitle) . '</textarea></td></tr>';
+    
+    echo '<tr><th><label for="hero_button_text">Button Text</label></th>';
+    echo '<td><input type="text" id="hero_button_text" name="hero_button_text" value="' . esc_attr($hero_button_text) . '" style="width: 100%;" /></td></tr>';
+    
+    echo '<tr><th><label for="hero_button_link">Button Link</label></th>';
+    echo '<td><input type="url" id="hero_button_link" name="hero_button_link" value="' . esc_attr($hero_button_link) . '" style="width: 100%;" /></td></tr>';
+    echo '</table>';
+}
+
+function welmacart_v2_save_hero_meta_box($post_id) {
+    if (!isset($_POST['hero_banner_meta_box_nonce'])) return;
+    if (!wp_verify_nonce($_POST['hero_banner_meta_box_nonce'], 'hero_banner_meta_box')) return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
+    
+    $fields = array('hero_title', 'hero_subtitle', 'hero_button_text', 'hero_button_link');
+    foreach ($fields as $field) {
+        if (isset($_POST[$field])) {
+            update_post_meta($post_id, $field, sanitize_text_field($_POST[$field]));
         }
     }
-    
-    return $file;
 }
+add_action('save_post', 'welmacart_v2_save_hero_meta_box');
 
 /**
- * Conditional image size generation
+ * Get Hero Banners for front page
  */
-add_filter('intermediate_image_sizes_advanced', 'welmacart_v2_conditional_image_sizes', 10, 2);
-function welmacart_v2_conditional_image_sizes($sizes, $image_meta) {
-    // Eğer orijinal resim çok küçükse mobile size oluşturma
-    if (isset($image_meta['width']) && $image_meta['width'] < 768) {
-        unset($sizes['hero-banner-mobile']);
-    }
+function welmacart_v2_get_hero_banners() {
+    $args = array(
+        'post_type' => 'hero_banner',
+        'posts_per_page' => 5,
+        'post_status' => 'publish',
+        'orderby' => 'menu_order date',
+        'order' => 'ASC'
+    );
     
-    // Eğer orijinal resim çok küçükse tablet size oluşturma
-    if (isset($image_meta['width']) && $image_meta['width'] < 1366) {
-        unset($sizes['hero-banner-tablet']);
-    }
-    
-    return $sizes;
-}
-
-/**
- * WebP format support (conditional)
- */
-add_filter('wp_image_mime_transforms', 'welmacart_v2_webp_support');
-function welmacart_v2_webp_support($transforms) {
-    // Sadece WebP desteği varsa aktif et
-    if (function_exists('imagewebp')) {
-        $transforms['image/jpeg'] = ['image/webp'];
-        $transforms['image/png'] = ['image/webp'];
-    }
-    return $transforms;
-}
-
-/**
- * Regenerate hero image thumbnails on theme activation (safe version)
- */
-add_action('after_switch_theme', 'welmacart_v2_regenerate_hero_images');
-function welmacart_v2_regenerate_hero_images() {
-    // Sadece küçük resimleri güncelle - memory-safe
-    $attachments = get_posts([
-        'post_type' => 'attachment',
-        'post_mime_type' => 'image',
-        'numberposts' => 10, // Sadece 10 resim
-        'orderby' => 'date',
-        'order' => 'DESC'
-    ]);
-    
-    foreach ($attachments as $attachment) {
-        $file_path = get_attached_file($attachment->ID);
-        if ($file_path && file_exists($file_path)) {
-            // Dosya boyutu kontrolü
-            $file_size = filesize($file_path);
-            if ($file_size < 5 * 1024 * 1024) { // 5MB'dan küçükse işle
-                wp_update_attachment_metadata($attachment->ID, wp_generate_attachment_metadata($attachment->ID, $file_path));
-            }
-        }
-    }
+    return get_posts($args);
 }
