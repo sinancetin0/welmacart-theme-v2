@@ -83,3 +83,24 @@ screenshot-*.png
 # Custom uploads (development)
 wp-content/themes/welmacart-v2/assets/images/temp/
 wp-content/themes/welmacart-v2/assets/images/test/
+
+# SFTP deployment configuration (sensitive data)
+.vscode/sftp.json
+
+# Development files (should not be deployed)
+*-backup.php
+*-safe.php
+*.disabled
+template-debug.php
+inc/debug.php.disabled
+
+# Git workflow
+.git/
+.gitattributes
+
+# Deployment script logs
+deploy.log
+
+# GitHub Actions (keep workflows, exclude sensitive configs)
+# .github/workflows/ should be committed
+# Any sensitive GitHub-related configs go here if needed

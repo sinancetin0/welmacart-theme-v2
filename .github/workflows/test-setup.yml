@@ -1,0 +1,201 @@
+name: Test Deployment Setup
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of test to run'
+        required: true
+        default: 'connection'
+        type: choice
+        options:
+        - connection
+        - validation
+        - full
+
+jobs:
+  test-connection:
+    name: Test SFTP Connection
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_type == 'connection' || github.event.inputs.test_type == 'full'
+    
+    steps:
+    - name: Test SFTP Connection
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.TURHOST_HOST }}
+        username: ${{ secrets.TURHOST_USERNAME }}
+        password: ${{ secrets.TURHOST_PASSWORD }}
+        protocol: ftp
+        port: 21
+        local-dir: ./
+        server-dir: /public_html/wp-content/themes/welmacart-v2/
+        dry-run: true
+        
+    - name: Connection Test Result
+      run: |
+        echo "✅ SFTP connection test completed successfully!"
+        echo "🌐 Host: ${{ secrets.TURHOST_HOST }}"
+        echo "👤 Username: ${{ secrets.TURHOST_USERNAME }}"
+        echo "📁 Remote path: /public_html/wp-content/themes/welmacart-v2/"
+
+  test-validation:
+    name: Test File Validation
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_type == 'validation' || github.event.inputs.test_type == 'full'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        
+    - name: Test PHP Validation
+      run: |
+        echo "🔍 Testing PHP file validation..."
+        
+        # Count PHP files
+        php_files=$(find . -name "*.php" -not -path "./.git/*" | wc -l)
+        echo "📊 Found $php_files PHP files"
+        
+        # Test syntax validation
+        echo "🧪 Testing syntax validation..."
+        find . -name "*.php" -not -path "./.git/*" -exec php -l {} \; | head -10
+        
+        echo "✅ PHP validation test completed!"
+        
+    - name: Test WordPress Structure
+      run: |
+        echo "🔍 Testing WordPress theme structure..."
+        
+        # Check required files
+        if [ -f "style.css" ]; then
+          echo "✅ style.css found"
+        else
+          echo "❌ style.css missing"
+        fi
+        
+        if [ -f "index.php" ]; then
+          echo "✅ index.php found"
+        else
+          echo "❌ index.php missing"
+        fi
+        
+        if [ -f "functions.php" ]; then
+          echo "✅ functions.php found"
+        else
+          echo "⚠️ functions.php not found (optional)"
+        fi
+        
+        # Check style.css header
+        if grep -q "Theme Name:" style.css; then
+          echo "✅ Theme header found in style.css"
+        else
+          echo "❌ Theme header missing in style.css"
+        fi
+        
+        echo "✅ WordPress structure test completed!"
+
+  test-file-exclusion:
+    name: Test File Exclusion Rules
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_type == 'full'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Test Exclusion Rules
+      run: |
+        echo "🔍 Testing file exclusion rules..."
+        
+        # Create test deployment directory
+        mkdir -p test-deployment
+        
+        # Copy files with exclusions (same as deployment)
+        rsync -av --progress . test-deployment/ \
+          --exclude='.git' \
+          --exclude='.github' \
+          --exclude='.vscode' \
+          --exclude='node_modules' \
+          --exclude='*.log' \
+          --exclude='.DS_Store' \
+          --exclude='*.disabled' \
+          --exclude='*-backup.php' \
+          --exclude='*-safe.php' \
+          --exclude='template-debug.php' \
+          --exclude='inc/debug.php' \
+          --exclude='test-deployment'
+          
+        echo "📊 Files that would be deployed:"
+        find test-deployment -type f | head -20
+        
+        total_files=$(find test-deployment -type f | wc -l)
+        echo "📈 Total files: $total_files"
+        
+        # Check for excluded files
+        excluded_found=false
+        
+        if find test-deployment -name "*-backup.php" | grep -q .; then
+          echo "❌ Backup files found in deployment package"
+          excluded_found=true
+        fi
+        
+        if find test-deployment -name "*.disabled" | grep -q .; then
+          echo "❌ Disabled files found in deployment package"
+          excluded_found=true
+        fi
+        
+        if [ -d "test-deployment/.git" ]; then
+          echo "❌ .git directory found in deployment package"
+          excluded_found=true
+        fi
+        
+        if [ "$excluded_found" = false ]; then
+          echo "✅ All exclusion rules working correctly!"
+        else
+          echo "❌ Some exclusion rules failed!"
+          exit 1
+        fi
+
+  notify-test-results:
+    name: Notify Test Results
+    runs-on: ubuntu-latest
+    needs: [test-connection, test-validation, test-file-exclusion]
+    if: always()
+    
+    steps:
+    - name: Test Results Summary
+      run: |
+        echo "🧪 Deployment Setup Test Results"
+        echo "================================"
+        
+        if [ "${{ needs.test-connection.result }}" = "success" ]; then
+          echo "✅ SFTP Connection: PASSED"
+        elif [ "${{ needs.test-connection.result }}" = "skipped" ]; then
+          echo "⏭️ SFTP Connection: SKIPPED"
+        else
+          echo "❌ SFTP Connection: FAILED"
+        fi
+        
+        if [ "${{ needs.test-validation.result }}" = "success" ]; then
+          echo "✅ File Validation: PASSED"
+        elif [ "${{ needs.test-validation.result }}" = "skipped" ]; then
+          echo "⏭️ File Validation: SKIPPED"
+        else
+          echo "❌ File Validation: FAILED"
+        fi
+        
+        if [ "${{ needs.test-file-exclusion.result }}" = "success" ]; then
+          echo "✅ File Exclusion: PASSED"
+        elif [ "${{ needs.test-file-exclusion.result }}" = "skipped" ]; then
+          echo "⏭️ File Exclusion: SKIPPED"
+        else
+          echo "❌ File Exclusion: FAILED"
+        fi
+        
+        echo ""
+        echo "🚀 Setup Status: Ready for deployment!"

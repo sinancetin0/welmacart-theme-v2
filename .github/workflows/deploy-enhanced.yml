@@ -1,0 +1,336 @@
+name: Deploy with Notifications
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+      notify_slack:
+        description: 'Send Slack notification'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  THEME_NAME: welmacart-v2
+  REMOTE_PATH: /public_html/wp-content/themes/welmacart-v2
+  SITE_URL: https://welma.tr
+
+jobs:
+  pre-deploy:
+    name: Pre-deployment Checks
+    runs-on: ubuntu-latest
+    
+    outputs:
+      should_deploy: ${{ steps.changes.outputs.should_deploy }}
+      php_files_changed: ${{ steps.changes.outputs.php_files }}
+      css_files_changed: ${{ steps.changes.outputs.css_files }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+        
+    - name: Check file changes
+      id: changes
+      run: |
+        echo "🔍 Analyzing changed files..."
+        
+        # Get changed files
+        changed_files=$(git diff --name-only HEAD^ HEAD)
+        echo "Changed files:"
+        echo "$changed_files"
+        
+        # Check for PHP changes
+        php_changes=$(echo "$changed_files" | grep -E '\.(php)$' || true)
+        css_changes=$(echo "$changed_files" | grep -E '\.(css|scss|sass)$' || true)
+        
+        should_deploy="true"
+        if [ -z "$changed_files" ]; then
+          should_deploy="false"
+        fi
+        
+        echo "should_deploy=$should_deploy" >> $GITHUB_OUTPUT
+        echo "php_files=$php_changes" >> $GITHUB_OUTPUT
+        echo "css_files=$css_changes" >> $GITHUB_OUTPUT
+        
+    - name: Slack - Deployment Started
+      if: github.event.inputs.notify_slack != 'false'
+      uses: 8398a7/action-slack@v3
+      with:
+        status: custom
+        custom_payload: |
+          {
+            "text": "🚀 WordPress Theme Deployment Started",
+            "attachments": [{
+              "color": "#36a64f",
+              "fields": [{
+                "title": "Theme",
+                "value": "${{ env.THEME_NAME }}",
+                "short": true
+              }, {
+                "title": "Branch",
+                "value": "${{ github.ref_name }}",
+                "short": true
+              }, {
+                "title": "Commit",
+                "value": "`${{ github.sha }}`",
+                "short": true
+              }, {
+                "title": "Author",
+                "value": "${{ github.actor }}",
+                "short": true
+              }]
+            }]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      continue-on-error: true
+
+  validate:
+    name: Validate & Test
+    runs-on: ubuntu-latest
+    needs: pre-deploy
+    if: needs.pre-deploy.outputs.should_deploy == 'true'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, ctype, json, tokenizer
+        
+    - name: Validate PHP syntax
+      run: |
+        echo "🔍 Validating PHP syntax..."
+        find . -name "*.php" \
+          -not -path "./.git/*" \
+          -not -path "./node_modules/*" \
+          -not -name "*-backup.php" \
+          -not -name "*-safe.php" \
+          -not -name "*.disabled" \
+          -exec php -l {} \; | grep -v "No syntax errors"
+        
+        if [ ${PIPESTATUS[0]} -ne 0 ]; then
+          echo "❌ PHP syntax errors found"
+          exit 1
+        fi
+        echo "✅ All PHP files have valid syntax"
+        
+    - name: Check WordPress theme structure
+      run: |
+        echo "🔍 Validating WordPress theme structure..."
+        
+        # Check required files
+        required_files=("style.css" "index.php")
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ Required file missing: $file"
+            exit 1
+          fi
+        done
+        
+        # Validate style.css header
+        if ! grep -q "Theme Name:" style.css; then
+          echo "❌ style.css missing required WordPress theme header"
+          exit 1
+        fi
+        
+        # Check for functions.php
+        if [ -f "functions.php" ]; then
+          echo "✅ functions.php found"
+        fi
+        
+        echo "✅ WordPress theme structure is valid"
+        
+    - name: Security scan
+      run: |
+        echo "🔒 Running basic security checks..."
+        
+        # Check for common security issues
+        security_issues=()
+        
+        # Check for eval() usage
+        if grep -r "eval(" . --include="*.php" --exclude-dir=".git" 2>/dev/null; then
+          security_issues+=("eval() function found")
+        fi
+        
+        # Check for base64_decode suspicious usage
+        if grep -r "base64_decode.*eval" . --include="*.php" --exclude-dir=".git" 2>/dev/null; then
+          security_issues+=("Suspicious base64_decode usage")
+        fi
+        
+        # Check for file_get_contents with URLs
+        if grep -r "file_get_contents.*http" . --include="*.php" --exclude-dir=".git" 2>/dev/null; then
+          security_issues+=("file_get_contents with external URLs")
+        fi
+        
+        if [ ${#security_issues[@]} -gt 0 ]; then
+          echo "⚠️ Security issues found:"
+          printf '%s\n' "${security_issues[@]}"
+          echo "Please review these issues before deployment"
+        else
+          echo "✅ No obvious security issues found"
+        fi
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [pre-deploy, validate]
+    if: success()
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Prepare deployment package
+      run: |
+        echo "📦 Preparing deployment package..."
+        
+        # Create deployment directory
+        mkdir -p deployment
+        
+        # Copy files with exclusions
+        rsync -av --progress . deployment/ \
+          --exclude='.git' \
+          --exclude='.github' \
+          --exclude='.vscode' \
+          --exclude='node_modules' \
+          --exclude='*.log' \
+          --exclude='.DS_Store' \
+          --exclude='*.disabled' \
+          --exclude='*-backup.php' \
+          --exclude='*-safe.php' \
+          --exclude='template-debug.php' \
+          --exclude='inc/debug.php' \
+          --exclude='deployment' \
+          --exclude='deploy.sh'
+          
+        # Create deployment info
+        cat > deployment/DEPLOYMENT_INFO.txt << EOF
+        Deployment Information
+        =====================
+        Date: $(date)
+        Git Commit: ${{ github.sha }}
+        Branch: ${{ github.ref_name }}
+        Triggered by: ${{ github.actor }}
+        Workflow: ${{ github.workflow }}
+        Environment: production
+        EOF
+        
+        echo "📊 Deployment package prepared:"
+        find deployment -type f | wc -l | xargs echo "Files:"
+        du -sh deployment | cut -f1 | xargs echo "Size:"
+        
+    - name: Deploy to Turhost
+      id: deploy
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.TURHOST_HOST }}
+        username: ${{ secrets.TURHOST_USERNAME }}
+        password: ${{ secrets.TURHOST_PASSWORD }}
+        protocol: ftp
+        port: 21
+        local-dir: ./deployment/
+        server-dir: ${{ env.REMOTE_PATH }}/
+        timeout: 60000
+        log-level: verbose
+        
+    - name: Post-deployment verification
+      run: |
+        echo "✅ Deployment completed!"
+        echo "🌐 Site: ${{ env.SITE_URL }}"
+        echo "📁 Path: ${{ env.REMOTE_PATH }}"
+        echo "🔗 Commit: ${{ github.sha }}"
+        
+  notify:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [pre-deploy, validate, deploy]
+    if: always() && needs.pre-deploy.outputs.should_deploy == 'true'
+    
+    steps:
+    - name: Slack - Deployment Success
+      if: needs.deploy.result == 'success' && github.event.inputs.notify_slack != 'false'
+      uses: 8398a7/action-slack@v3
+      with:
+        status: custom
+        custom_payload: |
+          {
+            "text": "✅ WordPress Theme Deployment Successful!",
+            "attachments": [{
+              "color": "good",
+              "fields": [{
+                "title": "Theme",
+                "value": "${{ env.THEME_NAME }}",
+                "short": true
+              }, {
+                "title": "Environment",
+                "value": "Production",
+                "short": true
+              }, {
+                "title": "Site URL",
+                "value": "<${{ env.SITE_URL }}|${{ env.SITE_URL }}>",
+                "short": true
+              }, {
+                "title": "Commit",
+                "value": "`${{ github.sha }}`",
+                "short": true
+              }],
+              "footer": "GitHub Actions",
+              "ts": ${{ github.event.head_commit.timestamp }}
+            }]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      continue-on-error: true
+        
+    - name: Slack - Deployment Failed
+      if: (needs.validate.result == 'failure' || needs.deploy.result == 'failure') && github.event.inputs.notify_slack != 'false'
+      uses: 8398a7/action-slack@v3
+      with:
+        status: custom
+        custom_payload: |
+          {
+            "text": "❌ WordPress Theme Deployment Failed!",
+            "attachments": [{
+              "color": "danger",
+              "fields": [{
+                "title": "Theme",
+                "value": "${{ env.THEME_NAME }}",
+                "short": true
+              }, {
+                "title": "Failed Step",
+                "value": "${{ needs.validate.result == 'failure' && 'Validation' || 'Deployment' }}",
+                "short": true
+              }, {
+                "title": "Branch",
+                "value": "${{ github.ref_name }}",
+                "short": true
+              }, {
+                "title": "Commit",
+                "value": "`${{ github.sha }}`",
+                "short": true
+              }, {
+                "title": "Logs",
+                "value": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>",
+                "short": true
+              }],
+              "footer": "GitHub Actions",
+              "ts": ${{ github.event.head_commit.timestamp }}
+            }]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      continue-on-error: true

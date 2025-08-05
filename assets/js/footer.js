@@ -2,6 +2,11 @@
  * Footer Newsletter Functionality
  */
 
+// 🚀 GitHub Actions Deployment Test - v1.0
+console.log('🎯 WelmaCarte Theme Footer Script Loaded Successfully!');
+console.log('📅 Deployment Date:', new Date().toLocaleString('tr-TR'));
+console.log('🔧 GitHub Actions Auto-Deployment Working!');
+
 document.addEventListener('DOMContentLoaded', function() {
     const newsletterForm = document.querySelector('.newsletter-form');
     
